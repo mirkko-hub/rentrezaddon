@@ -38,11 +38,6 @@ library(magrittr, warn.conflicts = FALSE)
 library(rentrezaddon)
 ```
 
-```{r}
-# system.file("data-raw", "example_xstringset.fna", package = "rentrezaddon", mustWork = TRUE)
-```
-
-
 ## Examples
 
 #### Blast searches - Prerequisites
@@ -91,13 +86,13 @@ Biostrings::readDNAStringSet("data-raw/example_blastdbcmd")
 ```{r blast_to_xstringset}
 # get sequences (xstringset) from identified ranges (blast)
 # generate example_xstringset and example_blast:
-# example_xstringset <- system.file("data-raw", "example_xstringset.fna" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readDNAStringSet(.)
-# example_xstringset
-# example_blast
-# 
-# # if DNA, output is ALWAYS in 5'-3' direction no matter which DNA strand the region is on!
-# example_blast %>%
-# blast_to_xstringset(., xstringset = example_xstringset)
+example_xstringset <- system.file("extdata", "example_xstringset.fna" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readDNAStringSet(.)
+example_xstringset
+example_blast
+
+# if DNA, output is ALWAYS in 5'-3' direction no matter which DNA strand the region is on!
+example_blast %>%
+blast_to_xstringset(., xstringset = example_xstringset)
 ```
 
 
@@ -113,10 +108,10 @@ blast_cdd$sseqid %>% purrr::map_dfr(., query_blastdbcmd_cdd, db = "/home/mirkko/
 
 why don't you try this?
 ```{r}
-# example_header <- system.file("data-raw", "example_headers.faa" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readAAStringSet(.)
-# example_header %>% names()
-# example_header %>% names() %>% map_dfr(., extract_header_2)
-# example_header %>% `names<-`(names(.) %>% map_dfr(., extract_header_2) %$% faa_id)
+example_header <- system.file("extdata", "example_headers.faa" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readAAStringSet(.)
+example_header %>% names()
+example_header %>% names() %>% map_dfr(., extract_header_2)
+example_header %>% `names<-`(names(.) %>% map_dfr(., extract_header_2) %$% faa_id)
 ```
 #### Some more rentrez help?
 

@@ -23,20 +23,16 @@ You can install the released version of rentrezaddon from GitHub.
 
 ``` r
 library(tidyverse, warn.conflicts = FALSE)
-#> ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 #> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 #> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 #> ✓ readr   1.4.0     ✓ forcats 0.5.0
-#> ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
 library(magrittr, warn.conflicts = FALSE)
 library(rentrezaddon)
-```
-
-``` r
-# system.file("data-raw", "example_xstringset.fna", package = "rentrezaddon", mustWork = TRUE)
 ```
 
 ## Examples
@@ -60,7 +56,7 @@ be lacking the BLAST+ executive anyways\!)
 # databases to search:
 nuccores <- readr::read_csv("~/Documents/NCBI_thesis_2/analysis/20201120_assembly_information_rbcl_form.csv") %$% caption
 #> 
-#> ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #> cols(
 #>   .default = col_character(),
 #>   nuccore_id = col_double(),
@@ -114,15 +110,19 @@ query_blastdbcmd(db = "/home/mirkko/Documents/r_packages/test_data/example_db",
                  dbtype = "nucl",
                  filepath = "data-raw/example_blastdbcmd", range = "1-10", strand = "minus")
 Biostrings::readDNAStringSet("data-raw/example_blastdbcmd")
-#> DNAStringSet object of length 7:
-#>     width seq                                               names               
-#> [1]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [2]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [3]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [4]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [5]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [6]    10 ATGATGGAAG                                        sequence_1:c10-1 
-#> [7]    10 ATGATGGAAG                                        sequence_1:c10-1
+#> DNAStringSet object of length 14:
+#>      width seq                                              names               
+#>  [1]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#>  [2]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#>  [3]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#>  [4]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#>  [5]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#>  ...   ... ...
+#> [10]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#> [11]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#> [12]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#> [13]    10 ATGATGGAAG                                       sequence_1:c10-1 
+#> [14]    10 ATGATGGAAG                                       sequence_1:c10-1
 
 # if no indexed database available / you don't want to generate it / above function does not work fo you
 # -> try 'blast_to_xstringset()'
@@ -131,13 +131,59 @@ Biostrings::readDNAStringSet("data-raw/example_blastdbcmd")
 ``` r
 # get sequences (xstringset) from identified ranges (blast)
 # generate example_xstringset and example_blast:
-# example_xstringset <- system.file("data-raw", "example_xstringset.fna" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readDNAStringSet(.)
-# example_xstringset
-# example_blast
-# 
-# # if DNA, output is ALWAYS in 5'-3' direction no matter which DNA strand the region is on!
-# example_blast %>%
-# blast_to_xstringset(., xstringset = example_xstringset)
+example_xstringset <- system.file("extdata", "example_xstringset.fna" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readDNAStringSet(.)
+example_xstringset
+#> DNAStringSet object of length 10:
+#>      width seq                                              names               
+#>  [1]  2620 CTTCCATCATCCGCCGTTAATTT...CACGAAACAGCGGTCATTGCTC sequence_1
+#>  [2]  1399 TAAATGCTACTTTAATGAATATT...TAGTTAAATGAGAATAATTATG sequence_2
+#>  [3]  1990 ATCGCCATTTTGTCCAGCAGATT...CCTTCCCCCTGGGACAACGAGC sequence_3
+#>  [4]  1360 CATCCAAAGTGCATTCGGGACTG...TTGACTGAACCAGTACTCCGGA sequence_4
+#>  [5]  1948 TCACAGAAATCGATCGAGCCTTC...TTCCCGTCAAATTACCATCGAG sequence_5
+#>  [6]  1402 TTACGTTCTAGGTAGGAACTAAC...TATGAATTATGAATTATGAATG sequence_6
+#>  [7]  1348 TTGCTGATAATCCTACAGATGTG...GTTACTGAAACACCAACAGCAA sequence_7
+#>  [8]  1402 TTACGTTCTAGGTAGGAACTAAC...TATGAATTATGAATTATGAATG sequence_8
+#>  [9]  1474 TGCGCAGTAACTCGCGGTAGCGA...AAACGTCCTGATTATTCTGATT sequence_9
+#> [10]  1276 TGGCGGCTGTGCAGGCGGCCTTG...TAGCGAGGCAGAGCCCGTGTCG sequence_10
+example_blast
+#> # A tibble: 17 x 13
+#>    qseqid sseqid pident length mismatch gapopen qstart  qend sstart  send
+#>    <chr>  <chr>   <dbl>  <int>    <int>   <int>  <int> <int>  <int> <int>
+#>  1 RcaSSU seque…  100      108        0       0      1   108    531   854
+#>  2 RcaSSU seque…   61.0     82       32       0     23   104   1203  1448
+#>  3 RcaSSU seque…   57.5     87       37       0     20   106    825  1085
+#>  4 RcaSSU seque…   43.1    102       58       0      3   104    108   413
+#>  5 RcaSSU seque…   47.4     78       41       0     27   104    501   734
+#>  6 RcaSSU seque…   49.1    106       49       1      1   106    471   773
+#>  7 RcaSSU seque…   45.2     93       51       0     16   108    168   446
+#>  8 RcaSSU seque…   52.8     36       17       0     69   104      3   110
+#>  9 RcaSSU seque…   57.7     78       33       0     27   104   1257  1490
+#> 10 RcaSSU seque…   44.8    105       58       0      1   105     99   413
+#> 11 RcaSSU seque…   47.7     88       46       0     19   106    507   770
+#> 12 RcaSSU seque…   50       86       43       0     20   105    861  1118
+#> 13 RcaSSU seque…   57.7     78       33       0     27   104   2262  2495
+#> 14 RcaSSU seque…   44.8    105       58       0      1   105   1104  1418
+#> 15 RcaSSU seque…   46.7     90       48       0     19   108   1512  1781
+#> 16 RcaSSU seque…   50       86       43       0     20   105   1866  2123
+#> 17 RcaSSU seque…   46.5     99       51       1      7   105    609   899
+#> # … with 3 more variables: evalue <dbl>, bitscore <int>, database <chr>
+
+# if DNA, output is ALWAYS in 5'-3' direction no matter which DNA strand the region is on!
+example_blast %>%
+blast_to_xstringset(., xstringset = example_xstringset)
+#> DNAStringSet object of length 17:
+#>      width seq                                              names               
+#>  [1]   324 CCAGTGATTCAGCCAGTCAATAA...TCAACGACCAAATGGCAAAAAT sequence_7
+#>  [2]   246 GAAACGATCGCTCAGATTCGTTC...CGAATCGATTATTCAACGCCCT sequence_5
+#>  [3]   261 TTAAGTGGGGAAACGATCGCTCA...GGTGATCCAGCGTCCCGATGGT sequence_5
+#>  [4]   306 ATAAACATCGCTAATGAGACGCT...GGAAATGATTATCCAGCGCCCC sequence_5
+#>  [5]   234 CAAGTGCGTTCCCTGCTGGCCCA...CGAAATGATTATTCACCGCCCC sequence_5
+#>  ...   ... ...
+#> [13]   234 CAGGTGCGTTCCCTCCTGGCCCA...GGAAACCATTATTCAGCGTCCC sequence_1
+#> [14]   315 CCCGCCGTTACCCCCGTTACTGA...AGTGATTATTCAACGCCCCGGT sequence_1
+#> [15]   270 AACTTAGCTGGGGATAGTGCTAA...ACACCGTCCCAATGGTAATGGC sequence_1
+#> [16]   258 TTAACCCCAGAAGTGATAGCAAC...ACAGATTATTCAACGTCCAGGG sequence_1
+#> [17]   291 AATCGGATTAATCATAGTATTAA...GAAAATTATTTATAGGCCCGAT sequence_2
 ```
 
 ``` r
@@ -162,10 +208,30 @@ blast_cdd$sseqid %>% purrr::map_dfr(., query_blastdbcmd_cdd, db = "/home/mirkko/
 why don’t you try this?
 
 ``` r
-# example_header <- system.file("data-raw", "example_headers.faa" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readAAStringSet(.)
-# example_header %>% names()
-# example_header %>% names() %>% map_dfr(., extract_header_2)
-# example_header %>% `names<-`(names(.) %>% map_dfr(., extract_header_2) %$% faa_id)
+example_header <- system.file("extdata", "example_headers.faa" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readAAStringSet(.)
+example_header %>% names()
+#> [1] "tr|F2X0C4|F2X0C4_HEVBR Ribulose bisphosphate carboxylase large chain OS=Hevea brasiliensis OX=3981 GN=rbcL PE=3 SV=1"        
+#> [2] "sp|Q09MH0|RBL_CITSI Ribulose bisphosphate carboxylase large chain OS=Citrus sinensis OX=2711 GN=rbcL PE=3 SV=1"              
+#> [3] "sp|P05698|RBL_HORVU Ribulose bisphosphate carboxylase large chain OS=Hordeum vulgare OX=4513 GN=rbcL PE=3 SV=2"              
+#> [4] "tr|A0A0M3TGJ0|A0A0M3TGJ0_LARTR Ribulose bisphosphate carboxylase large chain OS=Larrea tridentata OX=66636 GN=rbcL PE=3 SV=1"
+#> [5] "NP_904194.1 ribulose-1,5-bisphosphate carboxylase/oxygenase large subunit (chloroplast) [Physcomitrium patens]"
+example_header %>% names() %>% map_dfr(., extract_header_2)
+#> # A tibble: 5 x 3
+#>   faa_id     faa_title                                          faa_organism    
+#>   <chr>      <chr>                                              <chr>           
+#> 1 F2X0C4     Ribulose bisphosphate carboxylase large chain      Hevea brasilien…
+#> 2 Q09MH0     Ribulose bisphosphate carboxylase large chain      Citrus sinensis 
+#> 3 P05698     Ribulose bisphosphate carboxylase large chain      Hordeum vulgare 
+#> 4 A0A0M3TGJ0 Ribulose bisphosphate carboxylase large chain      Larrea tridenta…
+#> 5 NP_904194… ribulose-1,5-bisphosphate carboxylase/oxygenase l… Physcomitrium p…
+example_header %>% `names<-`(names(.) %>% map_dfr(., extract_header_2) %$% faa_id)
+#> AAStringSet object of length 5:
+#>     width seq                                               names               
+#> [1]   475 MSPQTETKASVGFKAGVKDYKLT...PELAAACEVWKEIKFEFEAVDTL F2X0C4
+#> [2]   475 MSPQTETKASVGFKAGVKDYKLT...PELAAACEVWKSIKFEFAAMDTL Q09MH0
+#> [3]   479 MSPQTETKAGVGFQAGVKDYKLT...AACEVWKAIKFEFEPVDTIDKKV P05698
+#> [4]   475 MSPQTETKASVGFKAGVKDYKLT...PELAAACEVWKEIKFEFPAMDTL A0A0M3TGJ0
+#> [5]   475 MSPRPEIKAGVGFKAGVKDYRLT...PELAAACEVWKEIKFEFDTVDTL NP_904194.1
 ```
 
 #### Some more rentrez help?
