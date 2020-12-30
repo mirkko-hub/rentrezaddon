@@ -22,7 +22,6 @@ to aid workflows based on [rentrez](https://docs.ropensci.org/rentrez/) and
 [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
 
 
-Blödmann
 ## Installation
 
 You can install the released version of rentrezaddon from GitHub.
