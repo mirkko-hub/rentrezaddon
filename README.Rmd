@@ -1,0 +1,127 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# rentrezaddon
+
+__Warning: This package is still under development !__
+
+A package comprising functions to execute [standalone Blast+](https://www.ncbi.nlm.nih.gov/books/NBK279690/)
+searches from within R (though executive and search path have to be set up separately),
+to aid workflows based on [rentrez](https://docs.ropensci.org/rentrez/) and 
+[Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
+
+
+
+## Installation
+
+You can install the released version of rentrezaddon from GitHub.
+
+```{r installation, eval = FALSE}
+# should not work, since the repo is private
+# devtools::install_github("mirkko-hub/rentrezaddon")
+```
+
+```{r}
+library(tidyverse, warn.conflicts = FALSE)
+library(magrittr, warn.conflicts = FALSE)
+library(rentrezaddon)
+```
+
+```{r}
+# system.file("data-raw", "example_xstringset.fna", package = "rentrezaddon", mustWork = TRUE)
+```
+
+
+## Examples
+
+#### Blast searches - Prerequisites
+
+* local installation of current release of [standalone Blast+](https://www.ncbi.nlm.nih.gov/books/NBK279690/)
+* databases generated using 'makeblastdb' (add '-parse_seqids' to work with blast_cmd)
+* some query file in fasta format
+* search path to executives are given in the body of the function, which have to 
+  be modified accordingly.
+  
+_Proper setup should enable something like this to work_
+
+(files are local only and not provided here, since everyone else would be lacking the BLAST+ executive anyways!)
+
+```{r blast}
+# databases to search:
+nuccores <- readr::read_csv("~/Documents/NCBI_thesis_2/analysis/20201120_assembly_information_rbcl_form.csv") %$% caption
+db_path <- paste0("~/Documents/NCBI_thesis_2/nuccore/db/", nuccores)[1:100]
+
+# query
+ccmm <- "~/Documents/NCBI_thesis_2/queries/pcc7120_ccmm.faa"
+
+# search
+blastn_ccmm <- purrr::map_dfr(db_path, query_blast, query = ccmm, blast = tblastn)
+head(blastn_ccmm)
+
+# works with conserved domain searches, too
+blast_cdd <- query_blast("/home/mirkko/Documents/NCBI/ncbi_databases/cdd/Cdd_NCBI", query = ccmm, blast = blastp)
+head(blast_cdd)
+
+### check ccds with query_blastdbcmd_cdd -- see below!
+```
+
+```{r blastdbcmd}
+# works only with indexed databases
+# to generate an indexed daabase, you have to include '-parse_seqids' in 'makeblastdb' command!
+query_blastdbcmd(db = "/home/mirkko/Documents/r_packages/test_data/example_db",
+                 entry = "sequence_1",
+                 dbtype = "nucl",
+                 filepath = "data-raw/example_blastdbcmd", range = "1-10", strand = "minus")
+Biostrings::readDNAStringSet("data-raw/example_blastdbcmd")
+
+# if no indexed database available / you don't want to generate it / above function does not work fo you
+# -> try 'blast_to_xstringset()'
+```
+```{r blast_to_xstringset}
+# get sequences (xstringset) from identified ranges (blast)
+# generate example_xstringset and example_blast:
+# example_xstringset <- system.file("data-raw", "example_xstringset.fna" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readDNAStringSet(.)
+# example_xstringset
+# example_blast
+# 
+# # if DNA, output is ALWAYS in 5'-3' direction no matter which DNA strand the region is on!
+# example_blast %>%
+# blast_to_xstringset(., xstringset = example_xstringset)
+```
+
+
+```{r query_blastdbcmd_cdd}
+# get further info to cdd motifs
+blast_cdd$sseqid %>% purrr::map_dfr(., query_blastdbcmd_cdd, db = "/home/mirkko/Documents/NCBI/ncbi_databases/cdd/Cdd_NCBI")
+```
+
+#### Some more Biostrings helpers
+
+* _have a fasta/uniprot/genbank/etc. header?_
+* __just wanna rename the files with id and remove that other crap?__
+
+why don't you try this?
+```{r}
+# example_header <- system.file("data-raw", "example_headers.faa" , package = "rentrezaddon", mustWork = TRUE) %>% Biostrings::readAAStringSet(.)
+# example_header %>% names()
+# example_header %>% names() %>% map_dfr(., extract_header_2)
+# example_header %>% `names<-`(names(.) %>% map_dfr(., extract_header_2) %$% faa_id)
+```
+#### Some more rentrez help?
+
+```{r}
+esummary_2 <- rentrez::entrez_summary(db = "protein", id = c("119370761", "73919686"))
+esummary_2 %>% purrr::map_dfr(., extract_esummary_protein)
+```
+
