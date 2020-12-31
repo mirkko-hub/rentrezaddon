@@ -17,18 +17,17 @@ separately), to aid workflows based on
 You can install the released version of rentrezaddon from GitHub.
 
 ``` r
-# should not work, since the repo is private
-# devtools::install_github("mirkko-hub/rentrezaddon")
+devtools::install_github("mirkko-hub/rentrezaddon")
 ```
 
 ``` r
 library(tidyverse, warn.conflicts = FALSE)
-#> ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 #> ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 #> ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 #> ✓ readr   1.4.0     ✓ forcats 0.5.0
-#> ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
 library(magrittr, warn.conflicts = FALSE)
@@ -56,7 +55,7 @@ be lacking the BLAST+ executive anyways\!)
 # databases to search:
 nuccores <- readr::read_csv("~/Documents/NCBI_thesis_2/analysis/20201120_assembly_information_rbcl_form.csv") %$% caption
 #> 
-#> ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 #> cols(
 #>   .default = col_character(),
 #>   nuccore_id = col_double(),
@@ -110,19 +109,9 @@ query_blastdbcmd(db = "/home/mirkko/Documents/r_packages/test_data/example_db",
                  dbtype = "nucl",
                  filepath = "data-raw/example_blastdbcmd", range = "1-10", strand = "minus")
 Biostrings::readDNAStringSet("data-raw/example_blastdbcmd")
-#> DNAStringSet object of length 14:
-#>      width seq                                              names               
-#>  [1]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#>  [2]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#>  [3]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#>  [4]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#>  [5]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#>  ...   ... ...
-#> [10]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#> [11]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#> [12]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#> [13]    10 ATGATGGAAG                                       sequence_1:c10-1 
-#> [14]    10 ATGATGGAAG                                       sequence_1:c10-1
+#> DNAStringSet object of length 1:
+#>     width seq                                               names               
+#> [1]    10 ATGATGGAAG                                        sequence_1:c10-1
 
 # if no indexed database available / you don't want to generate it / above function does not work fo you
 # -> try 'blast_to_xstringset()'

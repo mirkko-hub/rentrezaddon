@@ -28,8 +28,7 @@ to aid workflows based on [rentrez](https://docs.ropensci.org/rentrez/) and
 You can install the released version of rentrezaddon from GitHub.
 
 ```{r installation, eval = FALSE}
-# should not work, since the repo is private
-# devtools::install_github("mirkko-hub/rentrezaddon")
+devtools::install_github("mirkko-hub/rentrezaddon")
 ```
 
 ```{r}
